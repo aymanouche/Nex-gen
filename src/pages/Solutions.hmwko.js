@@ -1,10 +1,34 @@
-// API Reference: https://www.wix.com/velo/reference/api-overview/introduction
-// “Hello, World!” Example: https://learn-code.wix.com/en/article/hello-world
+import { local } from 'wix-storage';
+import wixData from 'wix-data';
 
 $w.onReady(function () {
-    // Write your JavaScript here
+    let lang = local.getItem("nexgen_lang") || "fr";
+    loadSolutions(lang);
 
-    // To select an element by ID use: $w('#elementID')
-
-    // Click 'Preview' to run your code
+    setInterval(() => {
+        const currentLang = local.getItem("nexgen_lang") || "fr";
+        if (currentLang !== lang) {
+            lang = currentLang;
+            loadSolutions(lang);
+        }
+    }, 500);
 });
+
+function loadSolutions(lang) {
+    wixData.query("ItSolutions")
+        .ascending("numeroOrdre")
+        .find()
+        .then((results) => {
+            $w("#solutionsRepeater").data = results.items;
+            $w("#solutionsRepeater").onItemReady(($item, itemData) => {
+                $item("#solutionImage").src  = itemData.imageIcone;
+                $item("#solutionTitle").text = lang === "fr"
+                    ? itemData.titreFrancais
+                    : itemData.titreAnglais;
+                $item("#solutionDesc").text  = lang === "fr"
+                    ? itemData.descriptionFrancais
+                    : itemData.descripti;
+            });
+        })
+        .catch((err) => console.log(err));
+}
