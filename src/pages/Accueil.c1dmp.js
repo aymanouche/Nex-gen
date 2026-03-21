@@ -1,10 +1,35 @@
-// API Reference: https://www.wix.com/velo/reference/api-overview/introduction
-// “Hello, World!” Example: https://learn-code.wix.com/en/article/hello-world
+import { local } from 'wix-storage';
+
+const translations = {
+  fr: {
+    title: "Des Solutions IT pour les Entreprises",
+    subtitle: "Nex-Gen connecte les entreprises aux meilleures solutions technologiques mondiales",
+    cta: "Commencer maintenant",
+  },
+  en: {
+    title: "IT Solutions for Businesses",
+    subtitle: "Nex-Gen connects companies to the best global technology solutions",
+    cta: "Get Started",
+  }
+};
 
 $w.onReady(function () {
-    // Write your JavaScript here
+    let lang = local.getItem("nexgen_lang") || "fr";
+    applyLanguage(lang);
 
-    // To select an element by ID use: $w('#elementID')
-
-    // Click 'Preview' to run your code
+    // Écouter le changement de langue toutes les 500ms
+    setInterval(() => {
+        const currentLang = local.getItem("nexgen_lang") || "fr";
+        if (currentLang !== lang) {
+            lang = currentLang;
+            applyLanguage(lang);
+        }
+    }, 500);
 });
+
+function applyLanguage(lang) {
+    const t = translations[lang];
+    $w("#heroTitle").text    = t.title;
+    $w("#heroSubtitle").text = t.subtitle;
+    $w("#heroCTA").label     = t.cta;
+}
