@@ -31,4 +31,6 @@ function loadSolutions(lang) {
             });
         })
         .catch((err) => console.log(err));
-}
+}git add .
+git commit -m "feat: page Solutions connectée à la BD avec FR/EN"
+git push
